@@ -84,9 +84,9 @@ ppts_ix=unique(ppts_ix);
 ppts_to_remove = subids(ppts_ix);
 
 % find intersection of both cell arrays
-[~, ix_all, ~] = intersect(final_subcodes, ppts_to_remove, 'stable')
+[~, ix_all, ~] = intersect(subids, ppts_to_remove, 'stable');
 
 % remove elements in both arrays from ppts_to_keep (i.e. remove subids
 % which do not survive threshold)
-ppts_to_keep = final_subcodes;
+ppts_to_keep = subids;
 ppts_to_keep(ix_all) = [];
