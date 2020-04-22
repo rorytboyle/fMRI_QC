@@ -1,4 +1,4 @@
-function [meanmove, maxmove, moveprc, ppts_to_remove]=...
+function [meanmove, maxmove, moveprc, ppts_to_remove, ppts_to_keep]=...
     checkMotionParams(data, prct, subids)
 % This function identifies participants to remove based on percentile of
 % frame-to-frame motion in translation and rotation axes.
@@ -25,6 +25,8 @@ function [meanmove, maxmove, moveprc, ppts_to_remove]=...
 % ppts_to_remove =  1 * n cell array containing subids of participants with
 %                   motion parameter values beyond the percentile
 %                   threshold.
+% ppts_to_keep =    1 * n cell array containing subids of participants with
+%                   motion parameter values below the percentile threshold
 
 % Author: Rob Whelan & Rory Boyle rorytboyle@gmail.com
 % Date: 19/04/2020
@@ -80,3 +82,11 @@ ppts_ix=unique(ppts_ix);
 
 %% 4) Return list of participant ids/codes
 ppts_to_remove = subids(ppts_ix);
+
+% find intersection of both cell arrays
+[~, ix_all, ~] = intersect(final_subcodes, ppts_to_remove, 'stable')
+
+% remove elements in both arrays from ppts_to_keep (i.e. remove subids
+% which do not survive threshold)
+ppts_to_keep = final_subcodes;
+ppts_to_keep(ix_all) = [];
