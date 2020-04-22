@@ -1,6 +1,6 @@
 function [meanmove, maxmove, moveprc, ppts_to_remove]=...
     checkMotionParams(data, prct, subids)
-% This function dentifies participants to remove based on percentile of
+% This function identifies participants to remove based on percentile of
 % frame-to-frame motion in translation and rotation axes.
 %
 % INPUT:
@@ -26,8 +26,7 @@ function [meanmove, maxmove, moveprc, ppts_to_remove]=...
 %                   motion parameter values beyond the percentile
 %                   threshold.
 
-% Author: Rob Whelan
-% Edits and comments: Rory Boyle rorytboyle@gmail.com
+% Author: Rob Whelan & Rory Boyle rorytboyle@gmail.com
 % Date: 19/04/2020
 
 %% 1) Calculate mean and max motion values and the values at specific percentile
