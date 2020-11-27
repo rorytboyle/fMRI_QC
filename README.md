@@ -1,2 +1,2 @@
 # fMRI_QC
-MATLAB scripts to QC preprocessed fMRI scans
+Code (MATLAB) and Python to QC preprocessed + postprocessed fMRI scans
