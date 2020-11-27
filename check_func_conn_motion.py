@@ -1,6 +1,8 @@
 def check_func_conn_motion(motion, conn_mx_dir, conn_mx_filename_str):
     """
-    
+    Creates a dataframe and dict summarising the relationship between
+    motion (mean framewise displacement) and functional connectivity at
+    the global level, regional/node level, and edge level.
 
     :param motion: pandas dataframe with columns 'subid' and 'mean_FWD'. Number
     of rows = number of participants.
