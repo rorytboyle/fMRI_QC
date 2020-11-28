@@ -1,8 +1,8 @@
 def check_func_conn_motion(motion, conn_mx_dir, conn_mx_filename_str):
     """
-    Creates a dataframe and dict summarising the relationship between
-    motion (mean framewise displacement) and functional connectivity at
-    the global level, regional/node level, and edge level.
+    Creates a dataframe and dict summarising the relationship between motion
+    (mean framewise displacement) and functional connectivity at the global
+    level, regional/node level, and edge level.
 
     :param motion: pandas dataframe with columns 'subid' and 'mean_FWD'. Number
     of rows = number of participants.
@@ -143,9 +143,9 @@ def check_func_conn_motion(motion, conn_mx_dir, conn_mx_filename_str):
     for edge in range(edge_df.shape[1]):
         r, p = stats.pearsonr(motion['mean_FWD'], edge_df.iloc[:, edge])
         
-        # make quick list of nodes that are correlated with FWD
+        # make quick list of edge indices that are correlated with FWD
         if p < .05:
-            correlated_edges.append(edge)
+            correlated_edges.append(edge_df.columns.tolist()[edge])
             
         # add to motion_check_df
         to_add = pd.Series(['edge', edge, r, p], index=cols)       
@@ -174,7 +174,7 @@ def check_func_conn_motion(motion, conn_mx_dir, conn_mx_filename_str):
     summary['percent_correlated_regions']  = len(regional_corr.index
            )/total_regions * 100
            
-    summary['ix_correlated_regions'] = regional_corr.loc[:, 'label'].values.tolist()
+    summary['ix_correlated_regions'] = correlated_regions
        
     ## Summarise correlation with edge-level functional connectivity
     
@@ -188,7 +188,7 @@ def check_func_conn_motion(motion, conn_mx_dir, conn_mx_filename_str):
     summary['percent_correlated_edges']  = len(edge_corr.index
            )/total_edges * 100
            
-    summary['ix_correlated_edges'] = edge_corr.loc[:, 'label'].values.tolist()
+    summary['ix_correlated_edges'] = correlated_edges
     
     #%% 8) return values
     return motion_check_df, summary
