@@ -1,12 +1,14 @@
 function [qc_array, qc_score] = spm_regChecker(files, compare_to, spm_path)
 % Loops through .nii files and allows user store a rating of and short 
 % note/comment on the file based on either image orientation, 
-% co-registration quality, or normalisation quality. Useful for visual QC /
-% inspection of images.
-% Ratings: 0: bad, 1: unsure, 2: good. When user types end, it saves a .mat
-% file to current directory containing: qc_array (filenames and ratings 
-% (Bad/Unsure/Good)), score (numerical rating values), and last_file_rated
-% (name of the last file rated)
+% co-registration quality, or normalisation quality. Useful for visual QC
+% / inspection of images. Type 'end' to complete ratings. Saves a .mat
+% file 'qc_info.mat' to current directory containing: qc_array (filenames
+% and ratings (Bad/Unsure/Good)), score (numerical rating values =0: bad,
+% 1: unsure, 2: good.), and last_file_rated (name of the last file rated).
+% CAUTION: THIS WILL OVERWRITE ANY PREVIOUSLY SAVED 'qc_info.mat' FILES IN
+% CURRENT DIRECTORY. MAKE SURE TO RENAME PREVIOUSLY SAVED FILES BEFORE 
+% CALLING FUNCTION.
 %
 % INPUT:
 % files =           (string) file path for directory containing .nii files   
