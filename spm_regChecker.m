@@ -1,14 +1,15 @@
 function [qc_array, qc_score] = spm_regChecker(files, compare_to, spm_path)
-% Loops through .nii files and allows user store a rating of the file based
-% on either image orientation, co-registration quality, or normalisation
-% quality. Useful for visual QC / inspection of images.
+% Loops through .nii files and allows user store a rating of and short 
+% note/comment on the file based on either image orientation, 
+% co-registration quality, or normalisation quality. Useful for visual QC /
+% inspection of images.
 % Ratings: 0: bad, 1: unsure, 2: good. When user types end, it saves a .mat
 % file to current directory containing: qc_array (filenames and ratings 
 % (Bad/Unsure/Good)), score (numerical rating values), and last_file_rated
 % (name of the last file rated)
 %
 % INPUT:
-% files =               
+% files =           (string) file path for directory containing .nii files   
 % compare_to =      (string) SPM template image against which you want to
 %                   compare. Must be either: 'single_subj_T1', 'avg152T1',
 %                   'avg152T2', 'avg305T1', or 'avg152PD'
@@ -19,14 +20,15 @@ function [qc_array, qc_score] = spm_regChecker(files, compare_to, spm_path)
 %                   don't provide the link to actual SPM installation).
 %
 % OUTPUT:
-% qc_array =        (cell)filenames and corresponding ratings
-%                   (Bad/Unsure/Good)
-% score =           (double) N * N array containing numerical ratings.  
-%                   Values:0 = Bad, 1 = Unsure, 2 = Good
+% qc_array =        (cell) files checked * 3 array containing filenames,
+%                   corresponding ratings (Bad/Unsure/Good), and
+%                   note/comments on file.
+% score =           (double) files checked * 1 array containing numerical
+%                   ratings. Values:0 = Bad, 1 = Unsure, 2 = Good
 % last_file_rated = (string) name of the last file rated
 %
 % Example usage:    [qc_array, qc_score] = orientation_checker(...
-%                   ' ', 'avg152T1', ...
+%                   'C:\files_to_qc ', 'avg152T1', ...
 %                   'C:\Program Files\MATLAB\R2018B\toolbox\spm12')
 %
 % Author: Rory Boyle
@@ -75,7 +77,7 @@ if exist(ref_image) ~= 2
 end
 %% 4) Loop through images and call spm CheckReg
 % Initialise arrays
-qc_array = cell(size(files));
+qc_array = cell(length(files), 1);
 qc_score = zeros(size(files));
 
 user_ends = 0; % variable to break out of while loop
@@ -87,9 +89,15 @@ for i = 1:length(files)
     tic; spm_check_registration(files{i}, ref_image); toc
     while user_ends == 0
             x = input('\n To end program & save info, type end \n Rate image. Enter 0 for bad, Enter 1 for unsure, Enter 2 for good: \n', 's');
+            y = input('\n Add note on file: \n', 's');
+           % if y is empty (i.e. no note provided), add empty string
+           if isempty(y)
+               y = ' ';
+           end
            % if image is bad (0) --> add 'Bad' to cell array and 0 to score array
             if strcmp(x, '0')
                qc_array(i, 2) = {'Bad'};
+               qc_array(i, 3) = cellstr(y);
                qc_score(i) = 0;
                last_file_rated = files(i);
                save('qc_info', 'qc_array', 'qc_score', 'last_file_rated');
@@ -98,6 +106,7 @@ for i = 1:length(files)
            % to score array
             elseif strcmp(x, '1')
                qc_array(i, 2) = {'Unsure'};
+               qc_array(i, 3) = cellstr(y);
                qc_score(i) = 1;
                last_file_rated = files(i);
                save('qc_info', 'qc_array', 'qc_score', 'last_file_rated');
@@ -105,6 +114,7 @@ for i = 1:length(files)
            % if image is good (2) --> add 'Good' to cell array and 2 to score array
             elseif strcmp(x, '2')
                qc_array(i, 2) = {'Good'};
+               qc_array(i, 3) = cellstr(y);
                qc_score(i) = 2;
                last_file_rated = files(i);
                save('qc_info', 'qc_array', 'qc_score', 'last_file_rated');
